@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ほたる監査進捗アプリ</title>
+<meta name="apple-mobile-web-app-title" content="ほたる監査進捗アプリ">
+<meta name="application-name" content="ほたる監査進捗アプリ">
+<meta name="theme-color" content="#2F3B33">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<script>
+/* ▼ ここに、Google Apps Script の「ウェブアプリのURL」(最後が /exec)を貼り付けてください */
+const BOARD_URL = 'ここにウェブアプリのURLを貼り付け';
+
+/* ホーム画面のアイコンから開いたときは、すぐにボードへ移動します */
+(function(){
+  const install = new URLSearchParams(location.search).has('install');
+  if (!install && /^https:\/\//.test(BOARD_URL)) { location.replace(BOARD_URL); return; }
+  if (install) history.replaceState(null, '', location.pathname);
+  window.__showGuide = true;
+})();
+</script>
+<style>
+:root{--bg:#EEF3F0;--surface:#fff;--ink:#18323A;--muted:#5B6D69;--line:#D3DDD8;--night:#2F3B33;--seal:#B8432F;--glow:#F2C230;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121A16;--surface:#1C2722;--ink:#E6EEEA;--muted:#9DB0AB;--line:#2E3C35}}
+:root[data-theme="dark"]{--bg:#121A16;--surface:#1C2722;--ink:#E6EEEA;--muted:#9DB0AB;--line:#2E3C35}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;font-size:15px;line-height:1.7}
+.hero{background:var(--night);color:#F4ECDD;padding:28px 20px 24px;text-align:center}
+.hero img{width:96px;height:96px;border-radius:22px;display:block;margin:0 auto 12px}
+.hero h1{margin:0;font-size:20px;letter-spacing:.04em}
+.hero p{margin:4px 0 0;font-size:13px;opacity:.8}
+main{max-width:560px;margin:0 auto;padding:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h2{font-size:16px;margin:0 0 8px}
+ol{margin:0;padding-left:1.4em}
+li{margin-bottom:8px}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tabs button{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 0;font:inherit;font-size:14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--night);color:#F4ECDD;border-color:var(--night)}
+.btn{display:block;width:100%;text-align:center;background:var(--seal);color:#fff;border:0;border-radius:10px;padding:13px;font:inherit;font-weight:700;text-decoration:none}
+.note{font-size:13px;color:var(--muted)}
+.key{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;background:var(--bg);font-size:13px}
+.warn{border-color:var(--seal)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="hero">
+  <img src="icon-180.png" alt="">
+  <h1>ほたる監査進捗アプリ</h1>
+  <p>ほたるグループ 法人内監査の共有ボード</p>
+</div>
+<main>
+  <div class="card warn" id="noUrl" hidden>
+    <h2>設定がまだです</h2>
+    <p class="note">このページの index.html の BOARD_URL に、ボードのURLが入っていません。管理者(松田)に連絡してください。</p>
+  </div>
+
+  <div class="card">
+    <h2>ホーム画面にアイコンを追加する</h2>
+    <p class="note" style="margin-top:0">このページを開いたまま、次の手順でホーム画面に追加してください。次からはアイコンを押すだけでボードが開きます。</p>
+    <div class="tabs" role="group" aria-label="スマホの種類">
+      <button id="tIos" aria-pressed="true">iPhone</button>
+      <button id="tAnd" aria-pressed="false">Android</button>
+    </div>
+    <ol id="gIos">
+      <li><b>Safari</b>でこのページを開きます(LINEなどの中で開いた場合は、右下や右上のメニューから「Safariで開く」を選びます)。</li>
+      <li>画面下の共有ボタン <span class="key">□↑</span> を押します。</li>
+      <li>メニューを下にずらして「<b>ホーム画面に追加</b>」を押します。</li>
+      <li>名前が「ほたる監査進捗アプリ」になっていることを確認し、右上の「<b>追加</b>」を押します。</li>
+    </ol>
+    <ol id="gAnd" hidden>
+      <li><b>Chrome</b>でこのページを開きます(LINEなどの中で開いた場合は、右上のメニューから「ブラウザで開く」を選びます)。</li>
+      <li>右上の <span class="key">⋮</span> を押します。</li>
+      <li>「<b>ホーム画面に追加</b>」を押します。</li>
+      <li>名前が「ほたる監査進捗アプリ」になっていることを確認し、「<b>追加</b>」を押します。続けて出る画面でも「追加」を押します。</li>
+    </ol>
+    <p class="note">前に追加した古いアイコンがある場合は、長押しして削除してから追加してください。ホーム画面では、名前が途中で「…」と省略されることがあります。</p>
+  </div>
+
+  <a class="btn" id="openBtn" href="#">ボードを開く</a>
+  <p class="note" style="text-align:center">アイコンを追加しないで、今すぐ開く場合はこちら</p>
+</main>
+<script>
+(function(){
+  const ok = /^https:\/\//.test(BOARD_URL);
+  document.getElementById('noUrl').hidden = ok;
+  const open = document.getElementById('openBtn');
+  if (ok) open.href = BOARD_URL; else open.hidden = true;
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const set = (isIos) => {
+    document.getElementById('tIos').setAttribute('aria-pressed', isIos);
+    document.getElementById('tAnd').setAttribute('aria-pressed', !isIos);
+    document.getElementById('gIos').hidden = !isIos;
+    document.getElementById('gAnd').hidden = isIos;
+  };
+  set(!/Android/.test(navigator.userAgent));
+  document.getElementById('tIos').onclick = () => set(true);
+  document.getElementById('tAnd').onclick = () => set(false);
+})();
+</script>
+</body>
+</html>
