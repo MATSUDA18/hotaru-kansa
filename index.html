@@ -17,7 +17,7 @@ const BOARD_URL = 'https://script.google.com/macros/s/AKfycbyV2TjcHS3XvwEIzl7DnW
 /* ホーム画面のアイコンから開いたときは、すぐにボードへ移動します */
 (function(){
   const install = new URLSearchParams(location.search).has('install');
-  if (!install && /^https:\/\//.test(BOARD_URL)) { location.replace(BOARD_URL); return; }
+  if (!install && /^https:\/\//.test(BOARD_URL)) { location.replace(BOARD_URL + (BOARD_URL.indexOf('?') < 0 ? '?' : '&') + 'from=icon'); return; }
   if (install) history.replaceState(null, '', location.pathname);
   window.__showGuide = true;
 })();
